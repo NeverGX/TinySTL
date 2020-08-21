@@ -1,6 +1,6 @@
 #ifndef _ITERATOR_H_
 #define _ITERATOR_H_
-
+#include<stddef.h>
 namespace TinySTL{
     //五种迭代器类型
 	struct input_iterator_tag{};//只读迭代器(read only)这种迭代器所指的对象，不允许外界改变，
@@ -22,6 +22,57 @@ namespace TinySTL{
 		typedef Pointer		pointer;
 		typedef Reference	reference;
 	};
+
+	/*
+	template <class T, class Distance> 
+	struct input_iterator
+	{
+		typedef input_iterator_tag	iterator_category;
+		typedef T					value_type;
+		typedef Distance			difference_type;
+		typedef T*					pointer;
+		typedef T&					reference;
+	};
+
+	struct output_iterator
+	{
+		typedef output_iterator_tag iterator_category;
+		typedef void                value_type;
+		typedef void                difference_type;
+		typedef void                pointer;
+		typedef void                reference;
+	};
+
+	template <class T, class Distance> 
+	struct forward_iterator
+	{
+		typedef forward_iterator_tag	iterator_category;
+		typedef T						value_type;
+		typedef Distance				difference_type;
+		typedef T*						pointer;
+		typedef T&						reference;
+	};
+
+	template <class T, class Distance> 
+	struct bidirectional_iterator
+	{
+		typedef bidirectional_iterator_tag	iterator_category;
+		typedef T							value_type;
+		typedef Distance					difference_type;
+		typedef T*							pointer;
+		typedef T&							reference;
+	};
+
+	template <class T, class Distance> 
+	struct random_access_iterator
+	{
+		typedef random_access_iterator_tag	iterator_category;
+		typedef T							value_type;
+		typedef Distance					difference_type;
+		typedef T*							pointer;
+		typedef T&							reference;
+	};
+	*/
 
      //迭代器萃取器
 	template<class Iterator>
@@ -55,29 +106,32 @@ namespace TinySTL{
 		typedef const T& 					reference;
 	};
 
-
-    //typename告诉编译器iterator_traits<Iterator>::iterator_category是一个类型而不是一个成员
+	//typename告诉编译器iterator_traits<Iterator>::iterator_category是一个类型而不是一个成员
     //这个函数可以很方便的决定某个迭代器category
-	template<class Iterator>
-	inline typename iterator_traits<Iterator>::iterator_category
-		iterator_category(const Iterator& It){
-			typedef typename iterator_traits<Iterator>::iterator_category category;
+	template<typename Iterator>
+	typename iterator_traits<Iterator>::iterator_category
+	iterator_category(const Iterator&)
+	{
+		typedef typename iterator_traits<Iterator>::iterator_category category;
 		return category();
-	}
 
-    //这个函数可以很方便的决定某个迭代器distance type
-	template<class Iterator>
-	inline typename iterator_traits<Iterator>::value_type*
-		value_type(const Iterator& It){
+	}
+	//这个函数可以很方便的决定某个迭代器distance type
+	template<typename Iterator>
+	typename iterator_traits<Iterator>::difference_type*
+	difference_type(const Iterator&)
+	{
+		return static_cast<typename iterator_traits<Iterator>::difference_type*>(0);
+	}
+	//这个函数可以很方便的决定某个迭代器value type
+	template<typename Iterator>
+	typename iterator_traits<Iterator>::value_type*
+	value_type(const Iterator&)
+	{
 		return static_cast<typename iterator_traits<Iterator>::value_type*>(0);
 	}
 
-    //这个函数可以很方便的决定某个迭代器value type
-	template<class Iterator>
-	inline typename iterator_traits<Iterator>::difference_type*
-		difference_type(const Iterator& It){
-		return static_cast<typename iterator_traits<Iterator>::difference_type*>(0);
-	}
+	
 }
 
 #endif
